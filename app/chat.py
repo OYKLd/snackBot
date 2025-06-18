@@ -21,14 +21,21 @@ def process_chat(chat_data: ChatRequest):
 
     system_message = Message(
         role="system",
-        content="Tu es un assistant de commande de nourriture dans un fastfood. Ton rôle est de prendre les commandes des clients. Réponds de manière concise et amicale, tu doit faire la conversation avec le client poser des questions jusqu'à obtenir tout les details de la commande et retourne après avoir pris la commande de l'utilisateur un json structuré et demande validation. Si le client valide sa commande, confirme que la commande est enregistree."
+        content="Tu es un assistant de commande de nourriture dans un fastfood. " \
+        "Ton rôle est de prendre les commandes des clients. " \
+        "Réponds de manière concise et amicale, tu doit faire la conversation avec le " \
+        "client poser des questions jusqu'à obtenir tout les details de la commande et " \
+        "retourne après avoir pris la commande de l'utilisateur un json structuré et demande validation. " \
+        "Si le client valide sa commande, confirme que la commande est enregistree."
 
     )
 
     messages_with_system = [system_message] + chat_data.messages
     reply = get_openai_response(messages_with_system)
+    print(f"Réponse de OpenAI: {reply}")  
 
     if "je valide" in reply.lower() or "c'est bon" in reply.lower():
         order = extract_order_from_text(reply)
+        print(f"Commande extraite: {order}")  
         return {"response": reply, "order": order}
     return {"response": reply, "order": None}
